@@ -1,0 +1,4 @@
+[submodule "clib/proxmark3"]
+	path = clib/proxmark3
+	url = https://github.com/angelsl/misc-proxmark3.git
+	branch = android
