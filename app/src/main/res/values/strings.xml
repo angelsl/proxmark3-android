@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Proxmark3</string>
+    <string name="selectDevice">Select device</string>
+    <string name="refresh">Refresh</string>
 </resources>

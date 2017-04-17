@@ -9,6 +9,9 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        ndk {
+            abiFilters 'x86', 'x86_64', 'armeabi', 'armeabi-v7a', 'arm64-v8a'
+        }
     }
     buildTypes {
         release {
@@ -21,9 +24,7 @@ android {
             path "../clib/CMakeLists.txt"
         }
     }
-    ndk {
-        abiFilters 'x86', 'x86_64', 'armeabi', 'armeabi-v7a', 'arm64-v8a'
-    }
+
 }
 
 dependencies {
