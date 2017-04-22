@@ -126,5 +126,10 @@ set(UPSTREAM_SOURCES
     proxmark3/common/tea.c
     )
 
-add_library(proxmark3 SHARED ${UPSTREAM_SOURCES} glue.c)
-target_link_libraries(proxmark3 m atomic)
+set(LOCAL_SOURCES
+    glue.c
+    jni.c
+    device.c)
+
+add_library(proxmark3 SHARED ${UPSTREAM_SOURCES} ${LOCAL_SOURCES})
+target_link_libraries(proxmark3 android atomic m)

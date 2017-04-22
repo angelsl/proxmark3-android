@@ -13,6 +13,8 @@
 #include "uart.h"
 #include "ui.h"
 
+#include "device.h"
+
 void ShowGraphWindow(void) {}
 void HideGraphWindow(void) {}
 void RepaintGraphWindow(void) {}
@@ -51,32 +53,37 @@ void iceSimple_Filter(int *data, const size_t len, uint8_t k){
 }
 
 // FIXME workaround upstream ui.h including readline.h for no reason
-// and cmdhflegic.c using readline(prompt) directly?!
+// FIXME and cmdhflegic.c using readline(prompt) directly?!
+// We replace readline with a dialog prompt
 char *readline(const char *prompt) {
+    // TODO popup dialog in android
     return "";
 }
 
-void PrintAndLog(char *fmt, ...)
-{
+// TODO also redirect stdout/stderr as upstream uses printf and fprintf(stderr, ...) too (sigh, why)
+void PrintAndLog(char *fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
     int bufsz = vsnprintf(NULL, 0, fmt, args);
     char buf[bufsz+1];
-	vsnprintf(buf, sizeof(buf), fmt, args);
+    vsnprintf(buf, sizeof(buf), fmt, args);
     // TODO JNI the printed message to the UI
 	va_end(args);
 }
 
-void SetLogFilename(char *fn) {}
+// TODO: Consider letting this set the log filename too? (aside from options in the GUI)
+void SetLogFilename(char *fn) { /* stubbed */ }
 
 void SendCommand(UsbCommand *c) {
-    // TODO
+    device_write((uint8_t *) c, sizeof(UsbCommand));
 }
 
 // unused but declared
 // const char *get_my_executable_path(void) {}
 
+// This is where all the Lua scripts and libraries are located
+// Returns a user-selected directory instead of the application directory
 const char *get_my_executable_directory(void) {
-    // TODO
+    // TODO let user select this directory; it's used for Lua scripting
     return ".";
 }

@@ -12,14 +12,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import angelsl.androidapp.proxmark3.R;
-import angelsl.androidapp.proxmark3.interop.Device;
+import angelsl.androidapp.proxmark3.interop.DeviceInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SelectDeviceActivity extends AppCompatActivity {
     private ListView _listView;
-    private ArrayAdapter<Device> _listViewAdapter;
+    private ArrayAdapter<DeviceInfo> _listViewAdapter;
     private Toolbar _toolbar;
 
     @Override
@@ -29,7 +29,7 @@ public class SelectDeviceActivity extends AppCompatActivity {
         _listView = (ListView) findViewById(R.id.select_device_list);
         _toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        _listViewAdapter = new ArrayAdapter<>(this, R.layout.select_device_list_item, new ArrayList<>(Arrays.asList(Device.findDevices())));
+        _listViewAdapter = new ArrayAdapter<>(this, R.layout.select_device_list_item, new ArrayList<>(Arrays.asList(DeviceInfo.findDevices())));
         _listView.setAdapter(_listViewAdapter);
         _listView.setOnItemClickListener(new DeviceSelectedListener());
 
@@ -47,7 +47,7 @@ public class SelectDeviceActivity extends AppCompatActivity {
         switch(item.getItemId()) {
             case R.id.refresh:
                 _listViewAdapter.clear();
-                _listViewAdapter.addAll(Device.findDevices());
+                _listViewAdapter.addAll(DeviceInfo.findDevices());
                 return true;
         }
 
@@ -58,7 +58,7 @@ public class SelectDeviceActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             new AlertDialog.Builder(SelectDeviceActivity.this)
-                    .setTitle("Device selected")
+                    .setTitle("DeviceInfo selected")
                     .setMessage(_listViewAdapter.getItem(position).getDisplayName())
                     .show();
             // TODO open actual activity
