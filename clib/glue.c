@@ -60,14 +60,10 @@ char *readline(const char *prompt) {
     return "";
 }
 
-// TODO also redirect stdout/stderr as upstream uses printf and fprintf(stderr, ...) too (sigh, why)
 void PrintAndLog(char *fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
-    int bufsz = vsnprintf(NULL, 0, fmt, args);
-    char buf[bufsz+1];
-    vsnprintf(buf, sizeof(buf), fmt, args);
-    // TODO JNI the printed message to the UI
+    vprintf(fmt, args);
 	va_end(args);
 }
 
