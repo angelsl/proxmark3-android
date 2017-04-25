@@ -36,20 +36,20 @@ void iceSimple_Filter(int *data, const size_t len, uint8_t k){
 // parameter K
 #define FILTER_SHIFT 4
 
-	int32_t filter_reg = 0;
-	int16_t input, output;
-	int8_t shift = (k <=8 ) ? k : FILTER_SHIFT;
+    int32_t filter_reg = 0;
+    int16_t input, output;
+    int8_t shift = (k <=8 ) ? k : FILTER_SHIFT;
 
-	for (int i = 0; i < len; ++i){
+    for (int i = 0; i < len; ++i){
 
-		input = data[i];
-		// Update filter with current sample
-		filter_reg = filter_reg - (filter_reg >> shift) + input;
+        input = data[i];
+        // Update filter with current sample
+        filter_reg = filter_reg - (filter_reg >> shift) + input;
 
-		// Scale output for unity gain
-		output = filter_reg >> shift;
-		data[i] = output;
-	}
+        // Scale output for unity gain
+        output = filter_reg >> shift;
+        data[i] = output;
+    }
 }
 
 // FIXME workaround upstream ui.h including readline.h for no reason
@@ -61,10 +61,11 @@ char *readline(const char *prompt) {
 }
 
 void PrintAndLog(char *fmt, ...) {
-	va_list args;
-	va_start(args, fmt);
+    va_list args;
+    va_start(args, fmt);
     vprintf(fmt, args);
-	va_end(args);
+    printf("\n");
+    va_end(args);
 }
 
 // TODO: Consider letting this set the log filename too? (aside from options in the GUI)

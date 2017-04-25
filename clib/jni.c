@@ -1,16 +1,16 @@
 #include <unistd.h>
-#include <pthread.h>
 #include <jni.h>
 #include <stdio.h>
 
 #include "cmdmain.h"
+#include "device.h"
 
 JNIEXPORT jint JNICALL Java_angelsl_androidapp_proxmark3_interop_Proxmark3_execCommand(JNIEnv *, jclass, jstring);
-JNIEXPORT jint JNICALL Java_angelsl_androidapp_proxmark3_interop_Proxmark3_init(JNIEnv *, jclass);
-JNIEXPORT void JNICALL Java_angelsl_androidapp_proxmark3_interop_Proxmark3_redirThreadWorker(JNIEnv *, jclass, jint);
+JNIEXPORT void JNICALL Java_angelsl_androidapp_proxmark3_interop_Proxmark3_redirThreadWorker(JNIEnv *, jclass);
+JNIEXPORT void JNICALL Java_angelsl_androidapp_proxmark3_interop_Proxmark3_nativeChangeDevice(JNIEnv *, jclass, jstring);
 void throw_runtime_exception(JNIEnv *env, const char *message);
 
-JNIEXPORT jint JNICALL Java_angelsl_androidapp_proxmark3_interop_Proxmark3_execCommand(JNIEnv *env, jclass class, jstring jCmd) {
+jint Java_angelsl_androidapp_proxmark3_interop_Proxmark3_execCommand(JNIEnv *env, jclass class, jstring jCmd) {
     const char *cmd = (*env)->GetStringUTFChars(env, jCmd, NULL);
     if (!cmd) {
         throw_runtime_exception(env, "GetStringUTFChars returned null");
@@ -21,33 +21,31 @@ JNIEXPORT jint JNICALL Java_angelsl_androidapp_proxmark3_interop_Proxmark3_execC
     return ret;
 }
 
-JNIEXPORT jint JNICALL Java_angelsl_androidapp_proxmark3_interop_Proxmark3_init(JNIEnv *env, jclass class) {
+void Java_angelsl_androidapp_proxmark3_interop_Proxmark3_redirThreadWorker(JNIEnv *env, jclass class) {
     int pfd[2];
     if (pipe(pfd)) {
         throw_runtime_exception(env, "Failed to create pipe");
-        return -1;
+        return;
     }
     
     // we don't bother cleaning up here
     // if it fails we just bail entirely
     if (dup2(pfd[1], STDOUT_FILENO) != STDOUT_FILENO) {
         throw_runtime_exception(env, "Failed to redirect stdout");
-        return -1;
+        return;
     }
     
     if (dup2(pfd[1], STDERR_FILENO) != STDERR_FILENO) {
         throw_runtime_exception(env, "Failed to redirect stderr");
-        return -1;
+        return;
     }
     
     close(pfd[1]);
+    setvbuf(stdout, 0, _IOLBF, 0);
+    setvbuf(stderr, 0, _IONBF, 0);
     
-    return pfd[0];
-}
-
-JNIEXPORT void JNICALL Java_angelsl_androidapp_proxmark3_interop_Proxmark3_redirThreadWorker(JNIEnv *env, jclass class, jint rfd) {
-    FILE *out = fdopen(rfd, "r");
-    char buf[2049];
+    FILE *out = fdopen(pfd[0], "r");
+    char buf[2048];
     jmethodID mid = (*env)->GetStaticMethodID(env, class, "dispatchOutput", "(Ljava/lang/String;)V");
     while (fgets(buf, sizeof(buf), out)) {
         jstring input = (*env)->NewStringUTF(env, buf);
@@ -60,6 +58,11 @@ void throw_runtime_exception(JNIEnv *env, const char *message) {
     if (!runtimeEx) {
         return;
     }
-    
     (*env)->ThrowNew(env, runtimeEx, message);
+}
+
+void Java_angelsl_androidapp_proxmark3_interop_Proxmark3_nativeChangeDevice(JNIEnv *env, jclass type, jstring path_) {
+    const char *path = (*env)->GetStringUTFChars(env, path_, 0);
+    device_change(path);
+    (*env)->ReleaseStringUTFChars(env, path_, path);
 }

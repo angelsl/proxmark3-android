@@ -132,4 +132,4 @@ set(LOCAL_SOURCES
     device.c)
 
 add_library(proxmark3 SHARED ${UPSTREAM_SOURCES} ${LOCAL_SOURCES})
-target_link_libraries(proxmark3 android atomic m)
+target_link_libraries(proxmark3 android atomic m log)
