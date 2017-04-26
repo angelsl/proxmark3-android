@@ -12,8 +12,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public final class DeviceInfo {
-    private String _path;
-    private String _display;
+    private final String _path;
+    private final String _display;
 
     private DeviceInfo(String path) {
         _path = _display = path;
@@ -47,8 +47,9 @@ public final class DeviceInfo {
             try {
                 ArrayList<String> result = new ArrayList<>();
                 Process ls = Runtime.getRuntime().exec(new String[]{"su", "root", "ls", "/dev"});
-                try (BufferedReader br =
-                             new BufferedReader(new InputStreamReader(ls.getInputStream()))) {
+                BufferedReader br =
+                        new BufferedReader(new InputStreamReader(ls.getInputStream()));
+                try {
                     String readLine;
 
                     while ((readLine = br.readLine()) != null) {
@@ -56,6 +57,8 @@ public final class DeviceInfo {
                             result.add("/dev/" + readLine);
                         }
                     }
+                } finally {
+                    br.close();
                 }
                 devPaths = result.toArray(new String[0]);
             } catch (IOException ioex) {

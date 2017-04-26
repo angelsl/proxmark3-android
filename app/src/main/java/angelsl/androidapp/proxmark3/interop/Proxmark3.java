@@ -1,13 +1,11 @@
 package angelsl.androidapp.proxmark3.interop;
 
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class Proxmark3 {
     private static OutputHandler _handler;
-    private static ExecutorService _commandQueue;
+    private static final ExecutorService _commandQueue;
     private static DeviceInfo _curDevice;
 
     static {

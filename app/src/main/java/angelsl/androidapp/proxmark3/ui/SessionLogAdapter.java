@@ -11,8 +11,8 @@ import angelsl.androidapp.proxmark3.R;
 import java.util.ArrayList;
 
 public class SessionLogAdapter extends RecyclerView.Adapter<SessionLogAdapter.ViewHolder> {
-    private Context _context;
-    private ArrayList<SessionLogEntry> _entries;
+    private final Context _context;
+    private final ArrayList<SessionLogEntry> _entries;
 
     SessionLogAdapter(Context context) {
         _context = context;
@@ -67,7 +67,7 @@ public class SessionLogAdapter extends RecyclerView.Adapter<SessionLogAdapter.Vi
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView _text;
+        final TextView _text;
 
         ViewHolder(View itemView) {
             super(itemView);

@@ -26,7 +26,9 @@
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/session_view"
         android:src="@drawable/ic_arrow_forward"
-        android:minWidth="48dip"/>
+        android:minWidth="48dip"
+        android:layout_alignParentRight="true"
+        android:contentDescription="@string/go"/>
 
     <ProgressBar
         android:id="@+id/session_go_wait"
@@ -36,7 +38,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignWithParentIfMissing="false"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:layout_alignParentRight="true" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/session_view"
@@ -55,6 +58,8 @@
         android:fontFamily="monospace"
         android:imeOptions="actionSend|flagForceAscii"
         android:inputType="text|textNoSuggestions"
-        android:maxLines="1" />
+        android:maxLines="1"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/session_go" />
 
 </RelativeLayout>
