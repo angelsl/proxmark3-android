@@ -1,15 +1,8 @@
-cmake_minimum_required(VERSION 3.4.1)
-
 include_directories(SYSTEM workaround)
-include_directories(proxmark3/client proxmark3/include proxmark3/common proxmark3/liblua)
+include_directories(proxmark3/client proxmark3/include proxmark3/common proxmark3/liblua ../app/src/main/c/jni)
 
-add_definitions(-DLUA_COMPAT_ALL -DLUA_USE_LINUX -DWITH_EMV -DANDROID=1 -D__ANDROID__=1)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -O3 -fvisibility=hidden")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wundef -Wformat=2")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wmissing-format-attribute -Wchar-subscripts -Wwrite-strings")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wpointer-arith -Wcast-align")
-# FIXME proxmark3 code quality
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-incompatible-pointer-types-discards-qualifiers")
+# shutup :]
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -O3 -fvisibility=hidden -w")
 
 set(UPSTREAM_SOURCES
     proxmark3/liblua/lapi.c
@@ -128,8 +121,6 @@ set(UPSTREAM_SOURCES
 
 set(LOCAL_SOURCES
     glue.c
-    jni.c
-    device.c)
+    )
 
-add_library(proxmark3 SHARED ${UPSTREAM_SOURCES} ${LOCAL_SOURCES})
-target_link_libraries(proxmark3 android atomic m log)
+add_library(proxmark3 STATIC ${UPSTREAM_SOURCES} ${LOCAL_SOURCES})

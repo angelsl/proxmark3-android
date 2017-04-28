@@ -2,8 +2,10 @@
 #include <jni.h>
 #include <stdio.h>
 
-#include "cmdmain.h"
 #include "device.h"
+
+// entrypoint to proxmark3
+int CommandReceived(char *);
 
 JNIEXPORT jint JNICALL Java_angelsl_androidapp_proxmark3_interop_Proxmark3_execCommand(JNIEnv *, jclass, jstring);
 JNIEXPORT void JNICALL Java_angelsl_androidapp_proxmark3_interop_Proxmark3_redirThreadWorker(JNIEnv *, jclass);

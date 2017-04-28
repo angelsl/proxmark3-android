@@ -1,6 +1,7 @@
 #include <malloc.h>
 #include <memory.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "device.h"
 
@@ -11,7 +12,7 @@ void device_change(const char *newPath) {
     char *new_device_path = malloc(strlen(newPath) + 1);
     device_path = strcpy(new_device_path, newPath);
     if (old_device_path) {
-        free(old_device_path);
+        free((char *) old_device_path);
     }
 }
 

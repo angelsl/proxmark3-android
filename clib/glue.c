@@ -1,17 +1,7 @@
-#include <pthread.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 
-#include "cmdhw.h"
-#include "cmdmain.h"
-#include "cmdparser.h"
-#include "proxmark3.h"
-#include "sleep.h"
-#include "uart.h"
-#include "ui.h"
+#include "usb_cmd.h"
 
 #include "device.h"
 
