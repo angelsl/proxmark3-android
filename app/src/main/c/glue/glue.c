@@ -1,9 +1,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include "usb_cmd.h"
+#include "../../../../../clib/proxmark3/include/usb_cmd.h"
 
-#include "device.h"
+#include "../jni/device.h"
 
 void ShowGraphWindow(void) {}
 void HideGraphWindow(void) {}
@@ -30,7 +30,7 @@ void iceSimple_Filter(int *data, const size_t len, uint8_t k){
     int16_t input, output;
     int8_t shift = (k <=8 ) ? k : FILTER_SHIFT;
 
-    for (int i = 0; i < len; ++i){
+    for (size_t i = 0; i < len; ++i){
 
         input = data[i];
         // Update filter with current sample

@@ -9,7 +9,7 @@ public class Proxmark3 {
     private static DeviceInfo _curDevice;
 
     static {
-        System.loadLibrary("proxmark3");
+        System.loadLibrary("pm3jni");
         _commandQueue = Executors.newSingleThreadExecutor();
         new Thread(new Runnable() {
                 @Override

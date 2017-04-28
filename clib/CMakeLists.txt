@@ -1,5 +1,5 @@
 include_directories(SYSTEM workaround)
-include_directories(proxmark3/client proxmark3/include proxmark3/common proxmark3/liblua ../app/src/main/c/jni)
+include_directories(proxmark3/client proxmark3/include proxmark3/common proxmark3/liblua)
 
 # shutup :]
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -O3 -fvisibility=hidden -w")
@@ -118,9 +118,4 @@ set(UPSTREAM_SOURCES
     proxmark3/common/sha256.c
     proxmark3/common/tea.c
     )
-
-set(LOCAL_SOURCES
-    glue.c
-    )
-
-add_library(proxmark3 STATIC ${UPSTREAM_SOURCES} ${LOCAL_SOURCES})
+add_library(proxmark3 STATIC ${UPSTREAM_SOURCES})
