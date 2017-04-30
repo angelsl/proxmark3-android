@@ -44,6 +44,8 @@ public class Proxmark3 {
         });
     }
 
+    // Used by C-side to send std{out,err} into the GUI
+    @SuppressWarnings("unused")
     private static void dispatchOutput(String n) {
         if (_handler != null) {
             _handler.onOutput(n);
