@@ -93,7 +93,7 @@ int pm3dev_change(const char *newpath) {
             pm3dev_fd = -1;
             break;
         case DEVTYPE_RELAYED:
-            // TODO
+            pm3dev_relay_shutdown();
             break;
         case DEVTYPE_TEST:
         case DEVTYPE_INVALID:
@@ -103,7 +103,7 @@ int pm3dev_change(const char *newpath) {
     if (*newpath) {
         int newfd = pm3uart_open(newpath);
         if (newfd == -1) {
-            return -1;
+            return pm3dev_relay_run(newpath);
         } else {
             pm3dev_fd = newfd;
             pm3dev_type = DEVTYPE_DIRECT;
