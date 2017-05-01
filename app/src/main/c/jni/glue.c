@@ -2,23 +2,18 @@
 #include <stdio.h>
 
 #include "../../../../../clib/proxmark3/include/usb_cmd.h"
+#include "../dev/pm3dev.h"
 
-#include "../jni/device.h"
-
-void ShowGraphWindow(void) {}
-void HideGraphWindow(void) {}
-void RepaintGraphWindow(void) {}
-void MainGraphics(void) {}
-void InitGraphics(int argc, char **argv) {}
-void ExitGraphics(void) {}
+void ShowGraphWindow(void) { printf("pm3jni: ShowGraphWindow called (stub)"); }
+void HideGraphWindow(void) { printf("pm3jni: HideGraphWindow called (stub)"); }
+void RepaintGraphWindow(void) { printf("pm3jni: RepaintGraphWindow called (stub)"); }
 
 // definitions for things in ui.h
 double CursorScaleFactor;
 int PlotGridX, PlotGridY, PlotGridXdefault = 64, PlotGridYdefault = 64, CursorCPos = 0, CursorDPos = 0;
 int PlotClock = 0, PlockClockStartIndex = 0;
 
-int offline;
-int flushAfterWrite = 0;
+int offline = 1;
 
 // FIXME move this out of ui.c in upstream...
 void iceSimple_Filter(int *data, const size_t len, uint8_t k){
@@ -47,6 +42,7 @@ void iceSimple_Filter(int *data, const size_t len, uint8_t k){
 // We replace readline with a dialog prompt
 char *readline(const char *prompt) {
     // TODO popup dialog in android
+    printf("pm3jni: readline called (stub)");
     return "";
 }
 
@@ -58,11 +54,8 @@ void PrintAndLog(char *fmt, ...) {
     va_end(args);
 }
 
-// TODO: Consider letting this set the log filename too? (aside from options in the GUI)
-void SetLogFilename(char *fn) { /* stubbed */ }
-
 void SendCommand(UsbCommand *c) {
-    device_write((uint8_t *) c, sizeof(UsbCommand));
+    pm3dev_write((uint8_t *) c, sizeof(UsbCommand));
 }
 
 // unused but declared
@@ -72,5 +65,6 @@ void SendCommand(UsbCommand *c) {
 // Returns a user-selected directory instead of the application directory
 const char *get_my_executable_directory(void) {
     // TODO let user select this directory; it's used for Lua scripting
+    printf("pm3jni: get_my_executable_directory called (stub)");
     return ".";
 }

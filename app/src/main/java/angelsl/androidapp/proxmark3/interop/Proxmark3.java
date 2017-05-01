@@ -14,7 +14,7 @@ public class Proxmark3 {
         new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    redirThreadWorker();
+                    jniStdoutWorker();
                 }
             }).start();
     }
@@ -23,11 +23,11 @@ public class Proxmark3 {
         _handler = h;
     }
 
-    public static void submitCommand(final String command) {
+    public static void execCommand(final String command) {
         _commandQueue.submit(new Runnable() {
             @Override
             public void run() {
-                execCommand(command);
+                jniExecCommand(command);
                 _handler.onCommandCompletion();
             }
         });
@@ -38,7 +38,7 @@ public class Proxmark3 {
             @Override
             public void run() {
                 _curDevice = device;
-                nativeChangeDevice(_curDevice.getPath());
+                jniChangeDevice(_curDevice.getPath());
                 _handler.onChangeDevice(device);
             }
         });
@@ -52,9 +52,9 @@ public class Proxmark3 {
         }
     }
 
-    private static native void redirThreadWorker();
-    private static native int execCommand(String command);
-    private static native void nativeChangeDevice(String path);
+    private static native void jniStdoutWorker();
+    private static native int jniExecCommand(String command);
+    private static native void jniChangeDevice(String path);
 
     public interface OutputHandler {
         void onOutput(String output);

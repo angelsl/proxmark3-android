@@ -107,7 +107,7 @@ public class SessionActivity extends AppCompatActivity implements View.OnClickLi
         _goWait.setVisibility(View.VISIBLE);
         _cmdText.setText("");
         appendLog(new SessionLogEntry(SessionLogEntry.Type.COMMAND, cmd));
-        Proxmark3.submitCommand(cmd);
+        Proxmark3.execCommand(cmd);
     }
 
     private void appendLog(SessionLogEntry entry) {

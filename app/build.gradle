@@ -14,7 +14,7 @@ android {
         }
         externalNativeBuild {
             cmake {
-                targets 'proxmark3', 'pm3jni', 'pm3jniglue', 'pm3relay.so'
+                targets 'proxmark3', 'pm3jni', 'pm3dev', 'pm3relayd.so'
             }
         }
     }

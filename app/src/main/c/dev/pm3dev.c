@@ -1,13 +1,12 @@
 #include <malloc.h>
 #include <memory.h>
 #include <stdio.h>
-#include <string.h>
 
-#include "device.h"
+#include "pm3dev.h"
 
 const char *device_path = NULL;
 
-void device_change(const char *newPath) {
+void pm3dev_change(const char *newPath) {
     const char *old_device_path = device_path;
     char *new_device_path = malloc(strlen(newPath) + 1);
     device_path = strcpy(new_device_path, newPath);
@@ -16,7 +15,7 @@ void device_change(const char *newPath) {
     }
 }
 
-int device_write(const uint8_t *bytes, const int size) {
+int pm3dev_write(const uint8_t *bytes, const int size) {
     if (!device_path) {
         return -1;
     } else if (!*device_path) {
