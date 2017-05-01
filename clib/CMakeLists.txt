@@ -1,6 +1,8 @@
 include_directories(SYSTEM workaround)
 include_directories(proxmark3/client proxmark3/include proxmark3/common proxmark3/liblua)
 
+add_definitions(-DLUA_COMPAT_ALL -DLUA_USE_LINUX)
+
 # shutup :]
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -O3 -fvisibility=hidden -w")
 
