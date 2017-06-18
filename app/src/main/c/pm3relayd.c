@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
             return -1;
         }
 
-        for (int i = 0; i < nfds; ++nfds) {
+        for (int i = 0; i < nfds; ++i) {
             struct epoll_event *event = events + i;
             switch (event->data.u32) {
                 case 0: { // infd
