@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId "angelsl.androidapp.proxmark3"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -14,7 +14,7 @@ android {
         }
         externalNativeBuild {
             cmake {
-                targets 'proxmark3', 'pm3jni', 'pm3relayd.so'
+                targets 'proxmark3', 'pm3jni', 'libpm3relayd.so'
             }
         }
     }

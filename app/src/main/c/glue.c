@@ -13,7 +13,7 @@ double CursorScaleFactor;
 int PlotGridX, PlotGridY, PlotGridXdefault = 64, PlotGridYdefault = 64, CursorCPos = 0, CursorDPos = 0;
 int PlotClock = 0, PlockClockStartIndex = 0;
 
-int offline = 1;
+int offline = 0;
 
 // FIXME move this out of ui.c in upstream...
 void iceSimple_Filter(int *data, const size_t len, uint8_t k) {

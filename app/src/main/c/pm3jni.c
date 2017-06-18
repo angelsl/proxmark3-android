@@ -50,6 +50,8 @@ JNIEXPORT void JNICALL Java_angelsl_androidapp_proxmark3_interop_Proxmark3_jniSt
     }
 
     close(pfd[1]);
+    setvbuf(stdout, NULL, _IONBF, 0);
+    setvbuf(stderr, NULL, _IONBF, 0);
 
     FILE *out = fdopen(pfd[0], "r");
     char buf[2048];
@@ -69,4 +71,18 @@ JNIEXPORT void JNICALL Java_angelsl_androidapp_proxmark3_interop_Proxmark3_jniCh
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved __attribute__((unused))) {
     pm3jni_jvm = vm;
     return JNI_VERSION_1_6;
+}
+
+JNIEXPORT void JNICALL Java_angelsl_androidapp_proxmark3_interop_Proxmark3_jniSetRelaydPath(
+        JNIEnv *env, jclass type __attribute__((unused)), jstring path_) {
+    const char *path = (*env)->GetStringUTFChars(env, path_, 0);
+    int pathlen = strlen(path) + 1;
+    char *pathcopy = malloc(pathlen);
+    if (!pathcopy) {
+        jni_throw(env, "Failed to allocate memory for relayd_path");
+        return;
+    }
+    memcpy(pathcopy, path, pathlen);
+    pm3dev_relayd_path = pathcopy;
+    (*env)->ReleaseStringUTFChars(env, path_, path);
 }

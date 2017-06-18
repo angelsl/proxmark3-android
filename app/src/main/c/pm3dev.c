@@ -19,7 +19,7 @@ int *pm3dev_thread_quit = NULL;
 
 int pm3dev_relay_run(const char *devpath) {
     if (!pm3dev_relayd_path) {
-        fprintf(stderr, "pm3dev: relayd_path unset");
+        fprintf(stderr, "pm3dev: relayd_path unset\n");
         return -1;
     }
 
@@ -35,21 +35,34 @@ int pm3dev_relay_run(const char *devpath) {
         return -1;
     }
 
-    char fdarg[2][16];
-    if (snprintf(fdarg[0], 16, "%d", outp[0]) > 16 || snprintf(fdarg[1], 16, "%d", inp[1])) {
-        fprintf(stderr, "pm3dev: warn: super-long fd?");
+    char sharg[1024] = {0};
+    if (snprintf(sharg, sizeof(sharg), "exec %s %s", pm3dev_relayd_path, devpath) > sizeof(sharg)) {
+        fprintf(stderr, "pm3dev: pm3dev_relay_run: snprintf buffer too small\n");
+        close(outp[0]);
+        close(outp[1]);
+        close(inp[0]);
+        close(inp[1]);
+        return -1;
     }
 
-    const char *const argv[] = {"root", pm3dev_relayd_path, fdarg[0], fdarg[1], devpath, 0};
-
-    pid_t pid = vfork();
+    const char *const argv[] = {"su", "root", "sh", "-c", sharg, 0};
+    fprintf(stderr, "pm3dev: pm3dev_relay_run: %s\n", sharg);
+    pid_t pid = fork();
     if (pid == 0) {
+        if (dup2(outp[0], STDIN_FILENO) != STDIN_FILENO ||
+                dup2(inp[1], STDOUT_FILENO) != STDOUT_FILENO) {
+            perror("pm3dev: pm3dev_relay_run: dup2");
+            _exit(-1);
+        }
         execvp("su", (char *const *) argv);
         _exit(-1);
     } else if (pid > 0) {
+        close(outp[0]);
+        close(inp[1]);
         pm3dev_relayd_pid = pid;
         pm3dev_relayd_outfd = outp[1];
         pm3dev_relayd_infd = inp[0];
+        pm3dev_type = DEVTYPE_RELAYED;
     } else {
         perror("pm3dev: vfork");
         close(outp[0]);
@@ -89,10 +102,12 @@ int pm3dev_relay_send(const uint8_t *bytes, const size_t size) {
 int pm3dev_change(const char *newpath) {
     switch (pm3dev_type) {
         case DEVTYPE_DIRECT:
+            pm3dev_type = DEVTYPE_INVALID;
             close(pm3dev_fd);
             pm3dev_fd = -1;
             break;
         case DEVTYPE_RELAYED:
+            pm3dev_type = DEVTYPE_INVALID;
             pm3dev_relay_shutdown();
             break;
         case DEVTYPE_TEST:
@@ -126,7 +141,7 @@ int pm3dev_write(const uint8_t *bytes, const size_t size) {
             break;
         }
         case DEVTYPE_INVALID:
-            fprintf(stderr, "pm3dev_write: pm3dev_type is DEVTYPE_INVALID");
+            fprintf(stderr, "pm3dev_write: pm3dev_type is DEVTYPE_INVALID\n");
             return -1;
         case DEVTYPE_DIRECT:
             if (pm3util_write(pm3dev_fd, bytes, size) == -1) {

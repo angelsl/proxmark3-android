@@ -63,6 +63,7 @@ public class SessionActivity extends AppCompatActivity implements View.OnClickLi
 
         _handler = new EventHandler(new WeakReference<>(this));
         Proxmark3.setOutputHandler(this);
+        Proxmark3.init(this);
     }
 
     private void showChangeDeviceDialog() {
