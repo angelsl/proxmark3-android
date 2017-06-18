@@ -1,5 +1,7 @@
-#include <unistd.h>
 #include "pm3util.h"
+
+#include <unistd.h>
+#include <stdint.h>
 
 int pm3util_read(int fd, void *rbuf, size_t sz) {
     uint8_t *buf = rbuf;

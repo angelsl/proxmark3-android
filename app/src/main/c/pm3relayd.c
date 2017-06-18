@@ -1,10 +1,12 @@
+#include "pm3relayd.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <sys/epoll.h>
+#include <unistd.h>
 
-#include "pm3relayd.h"
 #include "pm3uart.h"
 #include "pm3util.h"
 
@@ -21,7 +23,12 @@ int main(int argc, char *argv[]) {
     }
 
     if (fcntl(devfd, F_SETFL, O_NONBLOCK) == -1) {
-        perror("pm3relayd: fcntl");
+        perror("pm3relayd: fcntl(devfd)");
+        return -1;
+    }
+
+    if (fcntl(STDIN_FILENO, F_SETFL, O_NONBLOCK) == -1) {
+        perror("pm3relayd: fcntl(stdin)");
         return -1;
     }
 
@@ -33,12 +40,12 @@ int main(int argc, char *argv[]) {
 
     struct epoll_event events[2] = {{.events = EPOLLIN, .data.u32 = 0}, {.events = EPOLLIN, .data.u32 = 1}};
     if (epoll_ctl(epollfd, EPOLL_CTL_ADD, STDIN_FILENO, events) == -1) {
-        perror("pm3relayd: epoll_ctl (stdin)");
+        perror("pm3relayd: epoll_ctl(stdin)");
         return -1;
     }
 
     if (epoll_ctl(epollfd, EPOLL_CTL_ADD, devfd, events + 1) == -1) {
-        perror("pm3relayd: epoll_ctl (devfd)");
+        perror("pm3relayd: epoll_ctl(devfd)");
         fprintf(stderr, "pm3relayd: devfd = %d\n", devfd);
         return -1;
     }

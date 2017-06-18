@@ -1,9 +1,9 @@
+#include "pm3uart.h"
+
 #include <termios.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
-
-#include "pm3uart.h"
 
 // adapted from original proxmark3 uart.c
 
