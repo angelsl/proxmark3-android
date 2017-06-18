@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
+#include <errno.h>
 #include <sys/epoll.h>
 
 #include "pm3relayd.h"
@@ -16,6 +17,11 @@ int main(int argc, char *argv[]) {
     int devfd = pm3uart_open(argv[1]);
     if (devfd < 0) {
         fprintf(stderr, "pm3relayd: failed to open device\n");
+        return -1;
+    }
+
+    if (fcntl(devfd, F_SETFL, O_NONBLOCK) == -1) {
+        perror("pm3relayd: fcntl");
         return -1;
     }
 
@@ -84,6 +90,11 @@ int main(int argc, char *argv[]) {
                                 perror("pm3relayd: write(devfd)");
                                 return -1;
                             }
+                            if (tcdrain(devfd) == -1) {
+                                perror("pm3relayd: warn: tcdrain(devfd)");
+                            }
+
+                            fprintf(stderr, "pm3relayd: sent command\n");
                             break;
                         }
                         case RELAYDCMD_INVALID:
@@ -94,13 +105,15 @@ int main(int argc, char *argv[]) {
                 }
                 case 1: { // devfd
                     ssize_t rd = read(devfd, buf, 4096);
-                    if (rd < 0) {
+                    if (rd < 0 && errno != EAGAIN) {
                         perror("pm3relayd: read(devfd)");
                         return -1;
                     } else if (rd > 0) {
                         if (pm3util_write(STDOUT_FILENO, buf, (size_t) rd) == -1) {
                             perror("pm3relayd: write(outfd)");
+                            return -1;
                         }
+                        fprintf(stderr, "pm3relayd: recv command\n");
                     }
                     break;
                 }
