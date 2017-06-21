@@ -22,6 +22,12 @@ public class Proxmark3 {
                     jniStdoutWorker();
                 }
             }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                jniUsbInWorker();
+            }
+        }).start();
     }
 
     public static void init(Context c) {
@@ -65,6 +71,7 @@ public class Proxmark3 {
     }
 
     private static native void jniStdoutWorker();
+    private static native void jniUsbInWorker();
     private static native int jniExecCommand(String command);
     private static native void jniChangeDevice(String path);
     private static native void jniSetRelaydPath(String path);

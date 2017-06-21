@@ -1,8 +1,12 @@
+#include "glue.h"
+
 #include <stdint.h>
 #include <stdio.h>
 
 #include "../../../../clib/proxmark3/include/usb_cmd.h"
 #include "pm3dev.h"
+
+void UsbCommandReceived(UsbCommand *UC);
 
 void ShowGraphWindow(void) { printf("pm3jni: ShowGraphWindow called (stub)"); }
 void HideGraphWindow(void) { printf("pm3jni: HideGraphWindow called (stub)"); }
@@ -62,4 +66,12 @@ const char *get_my_executable_directory(void) {
     // TODO let user select this directory; it's used for Lua scripting
     printf("pm3jni: get_my_executable_directory called (stub)");
     return ".";
+}
+
+size_t pm3glue_usbcmd_size(void) {
+    return sizeof(UsbCommand);
+}
+
+void pm3glue_recv_cmd(void *cmd) {
+    UsbCommandReceived(cmd);
 }

@@ -86,3 +86,9 @@ JNIEXPORT void JNICALL Java_angelsl_androidapp_proxmark3_interop_Proxmark3_jniSe
     pm3dev_relayd_path = pathcopy;
     (*env)->ReleaseStringUTFChars(env, path_, path);
 }
+
+JNIEXPORT void JNICALL Java_angelsl_androidapp_proxmark3_interop_Proxmark3_jniUsbInWorker(JNIEnv *env, jclass type) {
+    if (pm3dev_relay_thread() == -1) {
+        jni_throw(env, "Relay thread quit");
+    }
+}
